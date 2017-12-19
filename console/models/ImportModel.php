@@ -12,6 +12,8 @@ use yii\helpers\Console;
 use solbianca\fias\models\FiasAddressObject;
 use solbianca\fias\models\FiasAddressObjectLevel;
 use solbianca\fias\models\FiasHouse;
+use solbianca\fias\models\FiasStead;
+use solbianca\fias\models\FiasRoom;
 
 class ImportModel extends BaseModel
 {
@@ -41,6 +43,10 @@ class ImportModel extends BaseModel
             $this->importAddressObject();
 
             $this->importHouse();
+
+            $this->importRoom();
+
+            $this->importStead();
 
             $this->addIndexes();
 
@@ -81,6 +87,35 @@ class ImportModel extends BaseModel
     }
 
     /**
+     * Import fias house
+     */
+    private function importStead()
+    {
+        Console::output('Импорт участков');
+        FiasStead::import(new XmlReader(
+            $this->directory->getSteadFile(),
+            FiasStead::XML_OBJECT_KEY,
+            array_keys(FiasStead::getXmlAttributes()),
+            FiasStead::getXmlFilters()
+        ));
+    }
+
+    /**
+     * Import fias house
+     */
+    private function importRoom()
+    {
+        Console::output('Импорт Квартир');
+        FiasRoom::import(new XmlReader(
+            $this->directory->getRoomFile(),
+            FiasRoom::XML_OBJECT_KEY,
+            array_keys(FiasRoom::getXmlAttributes()),
+            FiasRoom::getXmlFilters()
+        ));
+    }
+
+
+    /**
      * Import fias address object levels
      */
     private function importAddressObjectLevel()
@@ -114,25 +149,7 @@ class ImportModel extends BaseModel
     {
         Console::output('Сбрасываем индексы и ключи.');
 
-        Console::output('Сбрасываем внешние ключи.');
-        Yii::$app->getDb()->createCommand()->dropForeignKey('houses_parent_id_fkey', '{{%fias_house}}')->execute();
-        Yii::$app->getDb()->createCommand()->dropForeignKey('address_object_parent_id_fkey',
-            '{{%fias_address_object}}')->execute();
-        Yii::$app->getDb()->createCommand()->dropForeignKey('fk_region_code_ref_fias_region',
-            '{{%fias_address_object}}')->execute();
-
-        Console::output('Сбрасываем индексы.');
-        Yii::$app->getDb()->createCommand()->dropIndex('region_code', '{{%fias_address_object}}')->execute();
-        Yii::$app->getDb()->createCommand()->dropIndex('house_address_id_fkey_idx', '{{%fias_house}}')->execute();
-        Yii::$app->getDb()->createCommand()->dropIndex('address_object_parent_id_fkey_idx',
-            '{{%fias_address_object}}')->execute();
-        Yii::$app->getDb()->createCommand()->dropIndex('address_object_title_lower_idx',
-            '{{%fias_address_object}}')->execute();
-
-        Console::output('Сбрасываем основные ключи.');
-        Yii::$app->getDb()->createCommand()->dropPrimaryKey('pk', '{{%fias_house}}')->execute();
-        Yii::$app->getDb()->createCommand()->dropPrimaryKey('pk', '{{%fias_address_object}}')->execute();
-        Yii::$app->getDb()->createCommand()->dropPrimaryKey('pk', '{{%fias_address_object_level}}')->execute();
+        (new MigrationIndexFias())->down();
     }
 
     /**
@@ -142,32 +159,6 @@ class ImportModel extends BaseModel
     {
         Console::output('Добавляем к данным индексы и ключи.');
 
-        Console::output('Создаем основные ключи.');
-        Yii::$app->getDb()->createCommand()->addPrimaryKey('pk', '{{%fias_house}}', 'id')->execute();
-        Yii::$app->getDb()->createCommand()->addPrimaryKey('pk', '{{%fias_address_object}}', 'id')->execute();
-        Yii::$app->getDb()->createCommand()->addPrimaryKey('pk', '{{%fias_address_object_level}}',
-            ['title', 'code'])->execute();
-
-        Console::output('Добавляем индексы.');
-        Yii::$app->getDb()->createCommand()->createIndex('region_code', '{{%fias_address_object}}',
-            'region_code')->execute();
-        Yii::$app->getDb()->createCommand()->createIndex('house_address_id_fkey_idx', '{{%fias_house}}',
-            'address_id')->execute();
-        Yii::$app->getDb()->createCommand()->createIndex('address_object_parent_id_fkey_idx',
-            '{{%fias_address_object}}',
-            'parent_id')->execute();
-        Yii::$app->getDb()->createCommand()->createIndex('address_object_title_lower_idx', '{{%fias_address_object}}',
-            'title')->execute();
-
-        Console::output('Добавляем внешние ключи');
-        Yii::$app->getDb()->createCommand()->addForeignKey('houses_parent_id_fkey', '{{%fias_house}}', 'address_id',
-            '{{%fias_address_object}}',
-            'address_id', 'CASCADE', 'CASCADE')->execute();
-        Yii::$app->getDb()->createCommand()->addForeignKey('address_object_parent_id_fkey', '{{%fias_address_object}}',
-            'parent_id',
-            '{{%fias_address_object}}', 'address_id', 'CASCADE', 'CASCADE')->execute();
-        Yii::$app->getDb()->createCommand()->addForeignKey('fk_region_code_ref_fias_region', '{{%fias_address_object}}',
-            'region_code',
-            '{{%fias_region}}', 'code', 'NO ACTION', 'NO ACTION')->execute();
+        (new MigrationIndexFias())->up();
     }
 }

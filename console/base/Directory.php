@@ -65,6 +65,26 @@ class Directory
     }
 
     /**
+     * @return null|string
+     * @throws Exception
+     */
+    public function getDeletedSteadFile()
+    {
+        $fileName = $this->find('AS_DEL_STEAD_', false);
+        return $fileName ? $this->directoryPath . '/' . $fileName : null;
+    }
+
+    /**
+     * @return null|string
+     * @throws Exception
+     */
+    public function getDeletedRoomFile()
+    {
+        $fileName = $this->find('AS_DEL_ROOM_', false);
+        return $fileName ? $this->directoryPath . '/' . $fileName : null;
+    }
+
+    /**
      * @return string
      * @throws Exception
      */
@@ -81,6 +101,25 @@ class Directory
     {
         return $this->directoryPath . '/' . $this->find('AS_HOUSE_');
     }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function getSteadFile()
+    {
+        return $this->directoryPath . '/' . $this->find('AS_STEAD_');
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function getRoomFile()
+    {
+        return $this->directoryPath . '/' . $this->find('AS_ROOM_');
+    }
+
 
     /**
      * @return string

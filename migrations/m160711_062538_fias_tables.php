@@ -2,6 +2,7 @@
 
 use yii\db\Schema;
 use yii\db\Migration;
+use solbianca\fias\console\models\MigrationIndexFias;
 
 /**
  * Class m160711_062538_fias_tables
@@ -13,7 +14,7 @@ class m160711_062538_fias_tables extends Migration
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
-            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_bin ENGINE=InnoDB';
         }
 
         $this->createTable('{{%fias_house}}', [
@@ -23,15 +24,46 @@ class m160711_062538_fias_tables extends Migration
             'number' => $this->string()->comment('Номер дома'),
             'building' => $this->string()->comment('Корпус'),
             'structure' => $this->string()->comment('Строение'),
+            'cadastral_number' => $this->string(100)->comment('Кадастровый номер'),
             'postal_code' => $this->string()->comment('Индекс'),
+            'status' => $this->integer()->comment('Статус'),
             'oktmo' => $this->string()->comment('Код по справочнику ОКТМО'),
             'okato' => $this->string()->comment('Код по справочнику ОКАТО'),
             'ifnsul' => $this->integer()->comment('Код ИФНС ЮЛ'),
-            'ifnsfl' => $this->integer()->comment('Код ИФНС ФЛ')
+            'ifnsfl' => $this->integer()->comment('Код ИФНС ФЛ'),
+            'updated_at' => $this->datetime()->comment('Дата время внесения (обновления) записи'),
         ], $tableOptions);
 
-        $this->addPrimaryKey('pk', '{{%fias_house}}', 'id');
-        $this->createIndex('house_address_id_fkey_idx', '{{%fias_house}}', 'address_id');
+        $this->createTable('{{%fias_room}}', [
+            'id' => $this->char(36)->notNull()->comment('Идентификационный код записи'),
+            'room_id' => $this->char(36)->notNull()->comment('Идентификационный код комнаты'),
+            'house_id' => $this->char(36)->comment('Идентификационный код дома'),
+            'number' => $this->string()->comment('Номер квартиры/офиса'),
+            'type' => $this->integer()->comment('Тип комнаты'),
+            'number_room' => $this->string()->comment('Номер комнаты или помещения'),
+            'type_room' => $this->integer()->comment('Тип комнаты'),
+            'cadastral_number' => $this->string(100)->comment('Кадастровый номер'),
+            'postal_code' => $this->string(6)->comment('Почтовый индекс'),
+            'status' => $this->integer()->comment('Статус'),
+            'updated_at' => $this->datetime()->comment('Дата время внесения (обновления) записи'),
+        ], $tableOptions);
+
+
+        $this->createTable('{{%fias_stead}}', [
+            'id' => $this->char(36)->notNull()->comment('Идентификационный код записи'),
+            'stead_id' => $this->char(36)->notNull()->comment('Идентификационный код комнаты'),
+            'parent_id' => $this->char(36)->comment('Идентификационный код адресного объекта'),
+            'number' => $this->string()->comment('Номер участка'),
+            'cadastral_number' => $this->string(100)->comment('Кадастровый номер'),
+            'postal_code' => $this->string(6)->comment('Почтовый индекс'),
+            'status' => $this->integer()->comment('Статус'),
+            'oktmo' => $this->string()->comment('Код по справочнику ОКТМО'),
+            'okato' => $this->string()->comment('Код по справочнику ОКАТО'),
+            'ifnsul' => $this->integer()->comment('Код ИФНС ЮЛ'),
+            'ifnsfl' => $this->integer()->comment('Код ИФНС ФЛ'),
+            'updated_at' => $this->datetime()->comment('Дата время внесения (обновления) записи'),
+        ], $tableOptions);
+
 
         $this->createTable('{{%fias_address_object}}', [
             'id' => $this->char(36)->notNull()->comment('Идентификационный код записи'),
@@ -39,7 +71,9 @@ class m160711_062538_fias_tables extends Migration
             'parent_id' => $this->char(36)->notNull()->comment('Идентификационный код родительского адресного объекта'),
             'address_level' => $this->integer()->comment('Уровень объекта по ФИАС'),
             'title' => $this->string()->comment('Наименование объекта'),
+            'cadastral_number' => $this->string(100)->comment('Кадастровый номер'),
             'postal_code' => $this->integer()->comment('Почтовый индекс'),
+            'status' => $this->integer()->comment('Статус'),
             'region' => $this->string()->comment('Регион'),
             'prefix' => $this->string()->comment('Ул., пр. и так далее'),
             'area_code' => $this->string()->comment('Код района'),
@@ -55,12 +89,10 @@ class m160711_062538_fias_tables extends Migration
             'okato' => $this->string()->comment('Код по справочнику ОКАТО'),
             'oktmo' => $this->string()->comment('Код по справочнику ОКТМО'),
             'ifnsul' => $this->integer()->comment('Код ИФНС ЮЛ'),
-            'ifnsfl' => $this->integer()->comment('Код ИФНС ФЛ')
+            'ifnsfl' => $this->integer()->comment('Код ИФНС ФЛ'),
+            'updated_at' => $this->datetime()->comment('Дата время внесения (обновления) записи'),
         ], $tableOptions);
 
-        $this->addPrimaryKey('pk', '{{%fias_address_object}}', 'id');
-        $this->createIndex('address_object_parent_id_fkey_idx', '{{%fias_address_object}}', 'parent_id');;
-        $this->createIndex('address_object_title_lower_idx', '{{%fias_address_object}}', 'title');
 
         $this->createTable('{{%fias_address_object_level}}', [
             'title' => $this->string()->comment('Описание уровня'),
@@ -82,15 +114,15 @@ class m160711_062538_fias_tables extends Migration
 
         $this->addPrimaryKey('pk', '{{%fias_region}}', 'id');
 
-        $this->addForeignKey('houses_parent_id_fkey', '{{%fias_house}}', 'address_id', '{{%fias_address_object}}',
-            'address_id', 'CASCADE', 'CASCADE');
-        $this->addForeignKey('address_object_parent_id_fkey', '{{%fias_address_object}}', 'parent_id',
-            '{{%fias_address_object}}', 'address_id', 'CASCADE', 'CASCADE');
+
+        (new MigrationIndexFias())->up();
     }
 
     public function down()
     {
         $this->dropTable('{{%fias_house}}');
+        $this->dropTable('{{%fias_room}}');
+        $this->dropTable('{{%fias_stead}}');
         $this->dropTable('{{%fias_address_object}}');
         $this->dropTable('{{%fias_address_object_level}}');
         $this->dropTable('{{%fias_update_log}}');

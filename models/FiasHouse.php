@@ -123,6 +123,9 @@ class FiasHouse extends ActiveRecord implements FiasModelInterface
             'OKTMO' => 'oktmo',
             'IFNSUL' => 'ifnsul',
             'IFNSFL' => 'ifnsfl',
+            'LIVESTATUS' => 'status',
+            'CADNUM' => 'cadastral_number',
+            'UPDATEDATE' => 'updated_at',
         ];
     }
 

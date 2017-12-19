@@ -53,7 +53,7 @@ trait ImportModelTrait
                 $rows = implode("\n", $rows);
                 static::saveInFile($pathToFile, $rows);
                 $count += static::getDb()
-                    ->createCommand("LOAD DATA LOCAL INFILE '{$pathToFile}' INTO TABLE {$tableName} ({$values})")
+                    ->createCommand("LOAD DATA LOCAL INFILE '{$pathToFile}' IGNORE INTO TABLE {$tableName} ({$values})")
                     ->execute();
                 Console::output("Inserted {$count} rows");
             }

@@ -4,6 +4,7 @@ namespace solbianca\fias\console\base;
 
 use solbianca\fias\helpers\FileHelper;
 use yii\base\InvalidConfigException;
+use ForceUTF8\Encoding;
 
 class XmlReader
 {
@@ -34,7 +35,7 @@ class XmlReader
         }
     }
 
-    public function getRows($maxCount = 1000)
+    public function getRows($maxCount = 10000)
     {
         $this->ensureMaxCountIsValid($maxCount);
 
@@ -99,7 +100,11 @@ class XmlReader
         $result = [];
         foreach ($this->attributes as $attribute) {
             // Если атрибут отсутствует, в $result[$attribute] окажется null, также передаем null вместо пустого значения
-            $result[$attribute] = $this->reader->getAttribute($attribute) ?: null;
+            $value = $this->reader->getAttribute($attribute) ?: null;
+            if ($value !== null && strpos($value, '\\') !== false) {
+                $value = preg_replace('%\\\\.?%u', '', $value);
+            }
+            $result[$attribute] = $value;
         }
 
         return $result;

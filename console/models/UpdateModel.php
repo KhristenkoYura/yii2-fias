@@ -11,6 +11,8 @@ use solbianca\fias\console\base\XmlReader;
 use yii\helpers\Console;
 use solbianca\fias\models\FiasUpdateLog;
 use solbianca\fias\models\FiasHouse;
+use solbianca\fias\models\FiasStead;
+use solbianca\fias\models\FiasRoom;
 use solbianca\fias\models\FiasAddressObject;
 
 class UpdateModel extends BaseModel
@@ -72,6 +74,8 @@ class UpdateModel extends BaseModel
             $this->updateAddressObject();
 
             $this->updateHouse();
+            $this->updateStead();
+            $this->updateRoom();
 
             $this->saveLog();
 
@@ -97,6 +101,31 @@ class UpdateModel extends BaseModel
                 FiasHouse::getXmlFilters()
             ));
         }
+
+
+        $deletedSteadFile = $this->directory->getDeletedSteadFile();
+        if ($deletedSteadFile) {
+            Console::output("Удаление записей из таблицы " . FiasStead::tableName() . ".");
+            FiasStead::remove(new XmlReader(
+                $deletedSteadFile,
+                FiasStead::XML_OBJECT_KEY,
+                array_keys(FiasStead::getXmlAttributes()),
+                FiasStead::getXmlFilters()
+            ));
+        }
+
+
+        $deletedRoomFile = $this->directory->getDeletedRoomFile();
+        if ($deletedRoomFile) {
+            Console::output("Удаление записей из таблицы " . FiasRoom::tableName() . ".");
+            FiasRoom::remove(new XmlReader(
+                $deletedRoomFile,
+                FiasRoom::XML_OBJECT_KEY,
+                array_keys(FiasRoom::getXmlAttributes()),
+                FiasRoom::getXmlFilters()
+            ));
+        }
+
 
         $deletedAddressObjectsFile = $this->directory->getDeletedAddressObjectFile();
         if ($deletedAddressObjectsFile) {
@@ -137,6 +166,36 @@ class UpdateModel extends BaseModel
             FiasHouse::XML_OBJECT_KEY,
             array_keys($attributes),
             FiasHouse::getXmlFilters()
+        ), $attributes);
+    }
+
+    private function updateStead()
+    {
+        Console::output('Обновление участков');
+
+        $attributes = FiasStead::getXmlAttributes();
+        $attributes['PREVID'] = 'previous_id';
+
+        FiasStead::updateRecords(new XmlReader(
+            $this->directory->getSteadFile(),
+            FiasStead::XML_OBJECT_KEY,
+            array_keys($attributes),
+            FiasStead::getXmlFilters()
+        ), $attributes);
+    }
+
+    private function updateRoom()
+    {
+        Console::output('Обновление квартир');
+
+        $attributes = FiasHouse::getXmlAttributes();
+        $attributes['PREVID'] = 'previous_id';
+
+        FiasRoom::updateRecords(new XmlReader(
+            $this->directory->getRoomFile(),
+            FiasRoom::XML_OBJECT_KEY,
+            array_keys($attributes),
+            FiasRoom::getXmlFilters()
         ), $attributes);
     }
 }
