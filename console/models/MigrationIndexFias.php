@@ -15,10 +15,12 @@ class MigrationIndexFias extends Migration
     public $indexes = [
         'fias_house' => [
             'address_id',
+            'house_id',
             'cadastral_number',
         ],
         'fias_room' => [
             'house_id',
+            'room_id',
             'cadastral_number',
         ],
         'fias_stead' => [
@@ -31,7 +33,6 @@ class MigrationIndexFias extends Migration
             'title',
             'cadastral_number',
         ],
-
     ];
 
     public function indexes() {
