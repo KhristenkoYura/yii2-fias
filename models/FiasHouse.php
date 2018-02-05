@@ -129,6 +129,15 @@ class FiasHouse extends ActiveRecord implements FiasModelInterface
         ];
     }
 
+    public static function getValuesTypeAttributes()
+    {
+        return [
+            'HOUSEID' => 'int',
+            'HOUSEGUID' => 'int',
+            'AOGUID' => 'int',
+        ];
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

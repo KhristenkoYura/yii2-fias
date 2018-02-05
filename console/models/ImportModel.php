@@ -68,7 +68,8 @@ class ImportModel extends BaseModel
             $this->directory->getAddressObjectFile(),
             FiasAddressObject::XML_OBJECT_KEY,
             array_keys(FiasAddressObject::getXmlAttributes()),
-            FiasAddressObject::getXmlFilters()
+            FiasAddressObject::getXmlFilters(),
+            FiasAddressObject::getValuesTypeAttributes()
         ));
     }
 
@@ -82,7 +83,8 @@ class ImportModel extends BaseModel
             $this->directory->getHouseFile(),
             FiasHouse::XML_OBJECT_KEY,
             array_keys(FiasHouse::getXmlAttributes()),
-            FiasHouse::getXmlFilters()
+            FiasHouse::getXmlFilters(),
+            FiasHouse::getValuesTypeAttributes()
         ));
     }
 
@@ -96,7 +98,8 @@ class ImportModel extends BaseModel
             $this->directory->getSteadFile(),
             FiasStead::XML_OBJECT_KEY,
             array_keys(FiasStead::getXmlAttributes()),
-            FiasStead::getXmlFilters()
+            FiasStead::getXmlFilters(),
+            FiasStead::getValuesTypeAttributes()
         ));
     }
 
@@ -110,7 +113,8 @@ class ImportModel extends BaseModel
             $this->directory->getRoomFile(),
             FiasRoom::XML_OBJECT_KEY,
             array_keys(FiasRoom::getXmlAttributes()),
-            FiasRoom::getXmlFilters()
+            FiasRoom::getXmlFilters(),
+            FiasRoom::getValuesTypeAttributes()
         ));
     }
 
@@ -126,7 +130,8 @@ class ImportModel extends BaseModel
                 $this->directory->getAddressObjectLevelFile(),
                 FiasAddressObjectLevel::XML_OBJECT_KEY,
                 array_keys(FiasAddressObjectLevel::getXmlAttributes()),
-                FiasAddressObjectLevel::getXmlFilters()
+                FiasAddressObjectLevel::getXmlFilters(),
+                FiasAddressObjectLevel::getValuesTypeAttributes()
             )
         );
     }

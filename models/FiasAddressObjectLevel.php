@@ -50,6 +50,12 @@ class FiasAddressObjectLevel extends ActiveRecord implements FiasModelInterface
         ];
     }
 
+    public static function getValuesTypeAttributes()
+    {
+        return [
+        ];
+    }
+
     /**
      * @return array
      */

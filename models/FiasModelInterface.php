@@ -14,6 +14,14 @@ interface FiasModelInterface
      */
     public static function getXmlAttributes();
 
+
+    /**
+     * Преобразовываем значения элемента
+     *
+     * @return array
+     */
+    public static function getValuesTypeAttributes();
+
     /**
      * Имя временной таблицы
      *

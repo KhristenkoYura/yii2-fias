@@ -29,7 +29,7 @@
 -------------------
 Установить модуль с помощью композера:
 ````
-    composer require solbianca/yii2-fias "dev-master"
+    ./yii  migrate/up --migrationPath=migrations
 ````
 
  Применить миграции:

@@ -13,12 +13,14 @@ class XmlReader
     private $nodeName;
     private $attributes = [];
     private $filters = [];
+    private $values = [];
 
-    public function __construct($pathToFile, $nodeName, array $attributes, array $filters = [])
+    public function __construct($pathToFile, $nodeName, array $attributes, array $filters = [], array $values = [])
     {
         $this->nodeName = $nodeName;
         $this->attributes = $attributes;
         $this->filters = $filters;
+        $this->values = $values;
 
         $this->initializeReader($pathToFile);
     }
@@ -35,7 +37,7 @@ class XmlReader
         }
     }
 
-    public function getRows($maxCount = 10000)
+    public function getRows($maxCount = 100000)
     {
         $this->ensureMaxCountIsValid($maxCount);
 
@@ -103,6 +105,22 @@ class XmlReader
             $value = $this->reader->getAttribute($attribute) ?: null;
             if ($value !== null && strpos($value, '\\') !== false) {
                 $value = preg_replace('%\\\\.?%u', '', $value);
+            }
+
+            if (isset($this->values[$attribute])) {
+                foreach((array) $this->values[$attribute] as $type) {
+                    switch ($type) {
+                        case 'int':
+                            $chunk = explode('-', $value);
+                            $value = hexdec($chunk[0].$chunk[1].$chunk[2]);
+                            break;
+                        case 'null' :
+                            if (empty($value)) {
+                                $value = '\N';
+                            }
+                            break;
+                    }
+                }
             }
             $result[$attribute] = $value;
         }

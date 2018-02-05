@@ -116,6 +116,15 @@ class FiasRoom extends ActiveRecord implements FiasModelInterface
         ];
     }
 
+    public static function getValuesTypeAttributes()
+    {
+        return [
+            'ROOMID' => 'int',
+            'ROOMGUID' => 'int',
+            'HOUSEGUID' => 'int',
+        ];
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

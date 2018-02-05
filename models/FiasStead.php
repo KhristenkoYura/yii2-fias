@@ -114,6 +114,16 @@ class FiasStead extends ActiveRecord implements FiasModelInterface
         ];
     }
 
+    public static function getValuesTypeAttributes()
+    {
+        return [
+            'STEADID' => 'int',
+            'STEADGUID' => 'int',
+            'PARENTGUID' => ['int', 'null'],
+        ];
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */

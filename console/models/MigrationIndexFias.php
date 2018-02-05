@@ -16,7 +16,7 @@ class MigrationIndexFias extends Migration
         'fias_house' => [
             'address_id',
             'house_id',
-            'cadastral_number',
+            //'cadastral_number',
         ],
         'fias_room' => [
             'house_id',
@@ -53,7 +53,7 @@ class MigrationIndexFias extends Migration
     public function up()
     {
         foreach($this->tables as $table) {
-            $this->addPrimaryKey('pk', "{{%$table}}", 'id');
+            //$this->addPrimaryKey('pk', "{{%$table}}", 'id');
         }
 
         foreach($this->indexes() as  $index) {
@@ -64,7 +64,7 @@ class MigrationIndexFias extends Migration
     public function down()
     {
         foreach($this->tables as $table) {
-            $this->dropPrimaryKey('pk', "{{%$table}}");
+            //$this->dropPrimaryKey('pk', "{{%$table}}");
         }
 
         foreach($this->indexes() as  $index) {

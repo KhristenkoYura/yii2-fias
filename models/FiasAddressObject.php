@@ -96,6 +96,14 @@ class FiasAddressObject extends ActiveRecord implements FiasModelInterface
         ];
     }
 
+    public static function getValuesTypeAttributes()
+    {
+        return [
+            'AOID' => 'int',
+            'AOGUID' => 'int',
+        ];
+    }
+
     /**
      * @return array
      */

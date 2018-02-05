@@ -1,0 +1,2 @@
+
+./yii  migrate/up --migrationPath=migrations
