@@ -18,15 +18,15 @@ class m160711_062538_fias_tables extends Migration
         }
 
         $this->createTable('{{%fias_house}}', [
-            'id' => $this->bigPrimaryKey()->unsigned()->notNull()->comment('Идентификационный код записи'),
-            'house_id' => $this->bigInteger()->unsigned()->notNull()->comment('Идентификационный код дома'),
-            'address_id' => $this->bigInteger()->unsigned()->comment('Идентификационный код адресного объекта'),
+            'id' => $this->primaryKey()->unsigned()->notNull()->comment('Идентификационный код записи'),
+            'house_id' => $this->binary(16)->unsigned()->notNull()->comment('Идентификационный код дома'),
+            'address_id' => $this->binary(16)->unsigned()->comment('Идентификационный код адресного объекта'),
             'number' => $this->string()->comment('Номер дома'),
             'building' => $this->string()->comment('Корпус'),
             'structure' => $this->string()->comment('Строение'),
             'cadastral_number' => $this->string(100)->comment('Кадастровый номер'),
-            'postal_code' => $this->string()->comment('Индекс'),
-            'status' => $this->integer()->comment('Статус'),
+            'postal_code' => $this->integer()->unsigned()->comment('Индекс'),
+            //'status' => $this->integer()->comment('Статус'),
             'oktmo' => $this->string()->comment('Код по справочнику ОКТМО'),
             'okato' => $this->string()->comment('Код по справочнику ОКАТО'),
             'ifnsul' => $this->integer()->comment('Код ИФНС ЮЛ'),
@@ -35,9 +35,9 @@ class m160711_062538_fias_tables extends Migration
         ], $tableOptions);
 
         $this->createTable('{{%fias_room}}', [
-            'id' => $this->bigPrimaryKey()->unsigned()->notNull()->comment('Идентификационный код записи'),
-            'room_id' => $this->bigInteger()->unsigned()->notNull()->comment('Идентификационный код комнаты'),
-            'house_id' => $this->bigInteger()->unsigned()->comment('Идентификационный код дома'),
+            'id' => $this->primaryKey()->unsigned()->notNull()->comment('Идентификационный код записи'),
+            'room_id' => $this->binary(16)->unsigned()->notNull()->comment('Идентификационный код комнаты'),
+            'house_id' => $this->binary(16)->unsigned()->comment('Идентификационный код дома'),
             'number' => $this->string()->comment('Номер квартиры/офиса'),
             'type' => $this->integer()->comment('Тип комнаты'),
             'number_room' => $this->string()->comment('Номер комнаты или помещения'),
@@ -50,9 +50,9 @@ class m160711_062538_fias_tables extends Migration
 
 
         $this->createTable('{{%fias_stead}}', [
-            'id' => $this->bigPrimaryKey()->unsigned()->notNull()->comment('Идентификационный код записи'),
-            'stead_id' => $this->bigInteger()->unsigned()->notNull()->comment('Идентификационный код комнаты'),
-            'parent_id' => $this->bigInteger()->unsigned()->comment('Идентификационный код адресного объекта'),
+            'id' => $this->primaryKey()->unsigned()->notNull()->comment('Идентификационный код записи'),
+            'stead_id' => $this->binary(16)->unsigned()->notNull()->comment('Идентификационный код комнаты'),
+            'parent_id' => $this->binary(16)->unsigned()->comment('Идентификационный код адресного объекта'),
             'number' => $this->string()->comment('Номер участка'),
             'cadastral_number' => $this->string(100)->comment('Кадастровый номер'),
             'postal_code' => $this->string(6)->comment('Почтовый индекс'),
@@ -66,9 +66,9 @@ class m160711_062538_fias_tables extends Migration
 
 
         $this->createTable('{{%fias_address_object}}', [
-            'id' => $this->bigPrimaryKey()->unsigned()->notNull()->comment('Идентификационный код записи'),
-            'address_id' => $this->bigInteger()->unsigned()->comment('Идентификационный код адресного объекта'),
-            'parent_id' => $this->bigInteger()->unsigned()->notNull()->comment('Идентификационный код родительского адресного объекта'),
+            'id' => $this->primaryKey()->unsigned()->notNull()->comment('Идентификационный код записи'),
+            'address_id' => $this->binary(16)->unsigned()->comment('Идентификационный код адресного объекта'),
+            'parent_id' => $this->binary(16)->unsigned()->notNull()->comment('Идентификационный код родительского адресного объекта'),
             'address_level' => $this->integer()->comment('Уровень объекта по ФИАС'),
             'title' => $this->string()->comment('Наименование объекта'),
             'cadastral_number' => $this->string(100)->comment('Кадастровый номер'),

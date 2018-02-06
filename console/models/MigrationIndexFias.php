@@ -14,22 +14,24 @@ class MigrationIndexFias extends Migration
 
     public $indexes = [
         'fias_house' => [
-            'address_id',
-            'house_id',
+            'uniq_house_id' => ['house_id(32)'],
+            'address_id(4)',
             //'cadastral_number',
         ],
         'fias_room' => [
-            'house_id',
-            'room_id',
+            'uniq_room_id' => ['room_id(32)'],
+            'house_id(4)',
             'cadastral_number',
         ],
         'fias_stead' => [
-            'stead_id',
-            'parent_id',
+            'uniq_stead_id' => ['stead_id(32)'],
+            'stead_id(4)',
+            'parent_id(4)',
             'cadastral_number',
         ],
         'fias_address_object' => [
-            'parent_id',
+            'uniq_address_id' => ['address_id(32)'],
+            'parent_id(4)',
             'title',
             'cadastral_number',
         ],
@@ -38,11 +40,18 @@ class MigrationIndexFias extends Migration
     public function indexes() {
         $values = [];
         foreach($this->indexes as $table => $indexes) {
-            foreach($indexes as $columns) {
+            foreach($indexes as $name => $columns) {
+                $name = is_int($name)
+                    ? 'idx__' . implode('__', (array) $columns)
+                    : 'idx__' . $name;
+                $name = str_replace('(', '_', $name);
+                $name = str_replace(')', '', $name);
+
                 $values[] = [
-                    'name' => 'idx__' . implode('__', (array) $columns),
+                    'name' => $name,
                     'columns' => $columns,
-                    'table' => "{{%$table}}"
+                    'table' => "{{%$table}}",
+                    'uniq' => strpos($name, 'idx__uniq') === 0
                 ];
             }
         }

@@ -99,7 +99,7 @@ class FiasStead extends ActiveRecord implements FiasModelInterface
     public static function getXmlAttributes()
     {
         return [
-            'STEADID' => 'id',
+            //'STEADID' => 'id',
             'STEADGUID' => 'stead_id',
             'PARENTGUID' => 'parent_id',
             'NUMBER' => 'number',
@@ -117,9 +117,8 @@ class FiasStead extends ActiveRecord implements FiasModelInterface
     public static function getValuesTypeAttributes()
     {
         return [
-            'STEADID' => 'int',
-            'STEADGUID' => 'int',
-            'PARENTGUID' => ['int', 'null'],
+            'STEADGUID' => 'binary',
+            'PARENTGUID' => ['binary', 'null'],
         ];
     }
 

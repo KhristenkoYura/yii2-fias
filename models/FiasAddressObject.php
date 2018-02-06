@@ -68,10 +68,10 @@ class FiasAddressObject extends ActiveRecord implements FiasModelInterface
     public static function getXmlAttributes()
     {
         return [
-            'AOID' => 'id',
+            //'AOID' => 'id',
             'AOGUID' => 'address_id',
-            'AOLEVEL' => 'address_level',
             'PARENTGUID' => 'parent_id',
+            'AOLEVEL' => 'address_level',
             'FORMALNAME' => 'title',
             'POSTALCODE' => 'postal_code',
             'SHORTNAME' => 'prefix',
@@ -99,8 +99,9 @@ class FiasAddressObject extends ActiveRecord implements FiasModelInterface
     public static function getValuesTypeAttributes()
     {
         return [
-            'AOID' => 'int',
-            'AOGUID' => 'int',
+            //'AOID' => 'int',
+            'AOGUID' => 'binary',
+            'PARENTGUID' => 'binary',
         ];
     }
 

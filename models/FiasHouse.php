@@ -112,7 +112,7 @@ class FiasHouse extends ActiveRecord implements FiasModelInterface
     public static function getXmlAttributes()
     {
         return [
-            'HOUSEID' => 'id',
+            //'HOUSEID' => 'id',
             'HOUSEGUID' => 'house_id',
             'AOGUID' => 'address_id',
             'HOUSENUM' => 'number',
@@ -123,7 +123,7 @@ class FiasHouse extends ActiveRecord implements FiasModelInterface
             'OKTMO' => 'oktmo',
             'IFNSUL' => 'ifnsul',
             'IFNSFL' => 'ifnsfl',
-            'LIVESTATUS' => 'status',
+            //'LIVESTATUS' => 'status',
             'CADNUM' => 'cadastral_number',
             'UPDATEDATE' => 'updated_at',
         ];
@@ -132,9 +132,8 @@ class FiasHouse extends ActiveRecord implements FiasModelInterface
     public static function getValuesTypeAttributes()
     {
         return [
-            'HOUSEID' => 'int',
-            'HOUSEGUID' => 'int',
-            'AOGUID' => 'int',
+            'HOUSEGUID' => 'binary',
+            'AOGUID' => 'binary',
         ];
     }
 

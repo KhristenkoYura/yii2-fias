@@ -37,7 +37,7 @@ class XmlReader
         }
     }
 
-    public function getRows($maxCount = 100000)
+    public function getRows($maxCount = 10000)
     {
         $this->ensureMaxCountIsValid($maxCount);
 
@@ -113,6 +113,9 @@ class XmlReader
                         case 'int':
                             $chunk = explode('-', $value);
                             $value = hexdec($chunk[0].$chunk[1].$chunk[2]);
+                            break;
+                        case 'binary':
+                            $value = 'X\'' . str_replace('-', '', $value) . '\'';
                             break;
                         case 'null' :
                             if (empty($value)) {

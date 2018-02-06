@@ -102,7 +102,7 @@ class FiasRoom extends ActiveRecord implements FiasModelInterface
     public static function getXmlAttributes()
     {
         return [
-            'ROOMID' => 'id',
+            //'ROOMID' => 'id',
             'ROOMGUID' => 'room_id',
             'HOUSEGUID' => 'house_id',
             'FLATNUMBER' => 'number',
@@ -119,9 +119,8 @@ class FiasRoom extends ActiveRecord implements FiasModelInterface
     public static function getValuesTypeAttributes()
     {
         return [
-            'ROOMID' => 'int',
-            'ROOMGUID' => 'int',
-            'HOUSEGUID' => 'int',
+            'ROOMGUID' => 'binary',
+            'HOUSEGUID' => 'binary',
         ];
     }
 
