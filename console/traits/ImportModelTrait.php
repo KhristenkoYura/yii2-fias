@@ -59,7 +59,7 @@ trait ImportModelTrait
             if (!empty($rows)) {
                 $valuesRows = '(' . implode("),\n(", $rows) . ')';
 
-                $query = "INSERT DELAYED IGNORE INTO {$tableName} ({$fields}) VALUES $valuesRows" ;
+                $query = "INSERT IGNORE INTO {$tableName} ({$fields}) VALUES $valuesRows" ;
 
                 $count += static::getDb()
                     ->createCommand($query)
