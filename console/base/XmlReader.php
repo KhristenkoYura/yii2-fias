@@ -115,11 +115,11 @@ class XmlReader
                             $value = hexdec($chunk[0].$chunk[1].$chunk[2]);
                             break;
                         case 'binary':
-                            $value = 'X\'' . str_replace('-', '', $value) . '\'';
+                            $value = ['UNHEX("' .str_replace('-', '', $value) . '")'];
                             break;
                         case 'null' :
                             if (empty($value)) {
-                                $value = '\N';
+                                $value = ['NULL'];
                             }
                             break;
                     }

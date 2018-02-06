@@ -40,20 +40,29 @@ trait ImportModelTrait
     {
         $count = 0;
         $tableName = static::tableName();
-        $values = implode(', ', array_values($attributes));
+        $fields = implode(', ', array_values($attributes));
         $pathToFile = Yii::$app->getModule('fias')->directory . DIRECTORY_SEPARATOR . static::$importFile;
         $pathToFile = str_replace('\\', '/', $pathToFile);
 
         while ($data = $reader->getRows()) {
             $rows = [];
             foreach ($data as $row) {
-                $rows[] = implode("\t", array_values($row));
+                $lineRow = array_map(function($v) {
+                    if (is_array($v)) {
+                        return $v[0];
+                    } else {
+                        return  "'" . str_replace("\'", "\\\'", $v) . "'";
+                    }
+                    }, array_values($row));
+                $rows[] = implode(", ", $lineRow);
             }
-            if ($rows) {
-                $rows = implode("\n", $rows);
-                static::saveInFile($pathToFile, $rows);
+            if (!empty($rows)) {
+                $valuesRows = '(' . implode("),\n(", $rows) . ')';
+
+                $query = "INSERT DELAYED IGNORE INTO {$tableName} ({$fields}) VALUES $valuesRows" ;
+
                 $count += static::getDb()
-                    ->createCommand("LOAD DATA LOCAL INFILE '{$pathToFile}' IGNORE INTO TABLE {$tableName} ({$values})")
+                    ->createCommand($query)
                     ->execute();
                 Console::output("Inserted {$count} rows");
             }

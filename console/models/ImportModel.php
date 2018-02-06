@@ -34,7 +34,7 @@ class ImportModel extends BaseModel
     public function import()
     {
         try {
-            Yii::$app->getDb()->createCommand('SET foreign_key_checks = 0;')->execute();
+            //Yii::$app->getDb()->createCommand('SET foreign_key_checks = 0;')->execute();
 
             $this->dropIndexes();
 
@@ -52,7 +52,7 @@ class ImportModel extends BaseModel
 
             $this->saveLog();
 
-            Yii::$app->getDb()->createCommand('SET foreign_key_checks = 1;')->execute();
+            //Yii::$app->getDb()->createCommand('SET foreign_key_checks = 1;')->execute();
         } catch (\Exception $e) {
             throw $e;
         }
