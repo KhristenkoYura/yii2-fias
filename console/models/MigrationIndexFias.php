@@ -15,23 +15,23 @@ class MigrationIndexFias extends Migration
     public $indexes = [
         'fias_house' => [
             'uniq_house_id' => ['house_id(32)'],
-            'address_id(4)',
+            'address_id(8)',
             //'cadastral_number',
         ],
         'fias_room' => [
             'uniq_room_id' => ['room_id(32)'],
-            'house_id(4)',
+            'house_id(8)',
             'cadastral_number',
         ],
         'fias_stead' => [
             'uniq_stead_id' => ['stead_id(32)'],
-            'stead_id(4)',
-            'parent_id(4)',
+            'stead_id(8)',
+            'parent_id(8)',
             'cadastral_number',
         ],
         'fias_address_object' => [
             'uniq_address_id' => ['address_id(32)'],
-            'parent_id(4)',
+            'parent_id(8)',
             'title',
             'cadastral_number',
         ],
