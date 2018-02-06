@@ -44,14 +44,16 @@ trait ImportModelTrait
         $pathToFile = Yii::$app->getModule('fias')->directory . DIRECTORY_SEPARATOR . static::$importFile;
         $pathToFile = str_replace('\\', '/', $pathToFile);
 
+        $db = static::getDb();
+
         while ($data = $reader->getRows()) {
             $rows = [];
             foreach ($data as $row) {
-                $lineRow = array_map(function($v) {
+                $lineRow = array_map(function($v) use ($db) {
                     if (is_array($v)) {
                         return $v[0];
                     } else {
-                        return  "'" . str_replace("\'", "\\\'", $v) . "'";
+                        return "'" . addcslashes(str_replace("'", "''", $v), "\000\n\r\\\032") . "'";
                     }
                     }, array_values($row));
                 $rows[] = implode(", ", $lineRow);
@@ -61,7 +63,7 @@ trait ImportModelTrait
 
                 $query = "INSERT IGNORE INTO {$tableName} ({$fields}) VALUES $valuesRows" ;
 
-                $count += static::getDb()
+                $count += $db
                     ->createCommand($query)
                     ->execute();
                 Console::output("Inserted {$count} rows");
